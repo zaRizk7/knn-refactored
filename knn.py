@@ -55,6 +55,7 @@ def evaluate_model(x_train: np.ndarray, y_train: np.ndarray, x_test: np.ndarray,
 
 
 def train_test_split(df: pd.DataFrame, train_ratio: float = 0.8, random_state: int = 42) -> (np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray):
+    assert isinstance(df, pd.DataFrame), 'df must be a dataframe!'
     df_train = df.sample(frac=train_ratio, random_state=random_state)
     df_test = df.drop(df_train.index)
     x_train = df_train.iloc[:, :-1].to_numpy()
