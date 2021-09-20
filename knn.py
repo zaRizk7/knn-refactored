@@ -2,6 +2,17 @@ import numpy as np
 import pandas as pd
 
 
+class Scaler:
+    def __init__(self, x: np.ndarray):
+        assert isinstance(x, np.ndarray), 'x must be an ndarray!'
+        self.min = x.min()
+        self.max = x.max()
+
+    def transform(self, x: np.ndarray):
+        assert isinstance(x, np.ndarray), 'x must be an ndarray!'
+        return (x - self.min) / (self.max - self.min)
+
+
 class DistanceCalculator:
     def __init__(self, p: int = 2):
         assert p > 0, 'p must be positive value!'
@@ -68,6 +79,9 @@ def train_test_split(df: pd.DataFrame, train_ratio: float = 0.8, random_state: i
 if __name__ == '__main__':
     df = pd.read_csv('diabetes.csv')
     x_train, y_train, x_test, y_test = train_test_split(df)
+    scaler = Scaler(x_train)
+    x_train = scaler.transform(x_train)
+    x_test = scaler.transform(x_test)
     result = [(k, p, evaluate_model(x_train, y_train, x_test, y_test, k, p))
               for k in range(1, 100, 2) for p in range(1, 11)]
     k, p, score = max(result, key=lambda x: x[-1])
