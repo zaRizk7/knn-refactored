@@ -11,7 +11,7 @@ class DistanceCalculator:
         assert isinstance(x1, np.ndarray), 'x1 must be an ndarray!'
         assert isinstance(x2, np.ndarray), 'x2 must be an ndarray!'
         assert x1.shape[-1] == x2.shape[-1], 'x1 and x2 must be the same dimension!'
-        return np.sum(np.abs(x1 - x2) ** (1/self.p), axis=1)
+        return np.sum(np.abs(x1 - x2) ** (1/self.p), axis=-1)
 
 
 class KNearestNeighborClassifier:
@@ -48,13 +48,13 @@ def accuracy(y_true: np.ndarray, y_pred: np.ndarray) -> float:
     return (y_true == y_pred).sum() / len(y_true)
 
 
-def evaluate_model(x_train, y_train, x_test, y_test, k) -> float:
+def evaluate_model(x_train: np.ndarray, y_train: np.ndarray, x_test: np.ndarray, y_test: np.ndarray, k: int) -> float:
     knn_classifier = KNearestNeighborClassifier(x_train, y_train, 2*k+1)
     y_pred = np.array([knn_classifier.predict(x) for x in x_test])
     return accuracy(y_test, y_pred)
 
 
-def train_test_split(df, train_ratio=0.8, random_state=42):
+def train_test_split(df: pd.DataFrame, train_ratio: float = 0.8, random_state: int = 42) -> (np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray):
     df_train = df.sample(frac=train_ratio, random_state=random_state)
     df_test = df.drop(df_train.index)
     x_train = df_train.iloc[:, :-1].to_numpy()
