@@ -69,6 +69,6 @@ if __name__ == '__main__':
     df = pd.read_csv('diabetes.csv')
     x_train, y_train, x_test, y_test = train_test_split(df)
     result = [(k, evaluate_model(x_train, y_train, x_test, y_test, k))
-              for k in range(1, 500, 2)]
+              for k in range(1, 100, 2)]
     k, score = max(result, key=lambda x: x[-1])
     print(f'Best k is {k} with {score*100:.2f}% accuracy using PIDD dataset.')
