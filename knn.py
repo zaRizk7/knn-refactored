@@ -48,8 +48,8 @@ def accuracy(y_true: np.ndarray, y_pred: np.ndarray) -> float:
     return (y_true == y_pred).sum() / len(y_true)
 
 
-def evaluate_model(x_train: np.ndarray, y_train: np.ndarray, x_test: np.ndarray, y_test: np.ndarray, k: int) -> float:
-    knn_classifier = KNearestNeighborClassifier(x_train, y_train, k)
+def evaluate_model(x_train: np.ndarray, y_train: np.ndarray, x_test: np.ndarray, y_test: np.ndarray, k: int, p: int) -> float:
+    knn_classifier = KNearestNeighborClassifier(x_train, y_train, k, p)
     y_pred = np.array([knn_classifier.predict(x) for x in x_test])
     return accuracy(y_test, y_pred)
 
@@ -68,7 +68,8 @@ def train_test_split(df: pd.DataFrame, train_ratio: float = 0.8, random_state: i
 if __name__ == '__main__':
     df = pd.read_csv('diabetes.csv')
     x_train, y_train, x_test, y_test = train_test_split(df)
-    result = [(k, evaluate_model(x_train, y_train, x_test, y_test, k))
-              for k in range(1, 100, 2)]
-    k, score = max(result, key=lambda x: x[-1])
-    print(f'Best k is {k} with {score*100:.2f}% accuracy using PIDD dataset.')
+    result = [(k, p, evaluate_model(x_train, y_train, x_test, y_test, k, p))
+              for k in range(1, 100, 2) for p in range(1, 11)]
+    k, p, score = max(result, key=lambda x: x[-1])
+    print(
+        f'Best k is {k} and p is {p} with {score*100:.2f}% accuracy using PIDD dataset.')
