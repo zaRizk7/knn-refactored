@@ -5,12 +5,13 @@ import pandas as pd
 class Scaler:
     def __init__(self, x: np.ndarray):
         assert isinstance(x, np.ndarray), 'x must be an ndarray!'
-        self.min = x.min()
-        self.max = x.max()
+        self.mean = x.mean(axis=0)
+        self.std = x.std(axis=0)
 
     def transform(self, x: np.ndarray):
         assert isinstance(x, np.ndarray), 'x must be an ndarray!'
-        return (x - self.min) / (self.max - self.min)
+        assert self.std.shape[-1] == x.shape[-1], 'x must be same shape as x_train!'
+        return (x - self.mean) / self.std
 
 
 class DistanceCalculator:
